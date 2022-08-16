@@ -14,4 +14,4 @@ jobs:
       - name: 'Install dependencies'
         run: npm install
       - name: 'Check ts and code style'
-        run: npm ts && npm lint
+        run: npm run ts && npm run lint
