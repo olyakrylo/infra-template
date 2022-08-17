@@ -15,7 +15,8 @@ const main = async () => {
   const tags = (await execCommand('git', ['tag'])).split("\n").filter(Boolean);
   const currentTag = tags[tags.length - 1];
 
-  const commits = await getCommits(tags, currentTag); // commits list for task description
+  const commits = await getCommits(tags, currentTag);
+  console.info("Commits found");
 
   await updateTicket(currentTag, commits);
 
@@ -31,6 +32,8 @@ const main = async () => {
 
 const updateTicket = async (currentTag, commits) => {
   const pusherName = github.context.payload.pusher?.name;
+  console.log(github.context.payload);
+  console.log(github.context.payload.pusher);
   const pushDate = new Date().toLocaleDateString();
 
   const tagNum = currentTag.replace("rc-", "");
@@ -46,7 +49,7 @@ const updateTicket = async (currentTag, commits) => {
       description,
     })
   }).then((response) => response.json()).then((res) => {
-    console.log("Ticket is successfully updated");
+    console.info("Ticket is successfully updated");
   });
 }
 
@@ -78,7 +81,7 @@ const execCommand = async (command, options) => {
   return resString;
 }
 
-main().then(() => console.log("Successfully done!"));
+main().then(() => console.info("Successfully done!"));
 
 
 // original name
