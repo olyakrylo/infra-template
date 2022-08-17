@@ -1,27 +1,14 @@
-name: CI
+name: Release
 
-on: [push, workflow_dispatch]
+on:
+  workflow_run:
+    workflows: [Tests]
+    types: [completed]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: 'Install dependencies'
-        run: npm install
-
-      - name: 'Check ts and code style'
-        run: npm run ts && npm run lint
-
   release:
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
-    needs: test
     steps:
       - uses: actions/checkout@v3
         with:
