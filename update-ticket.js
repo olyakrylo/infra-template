@@ -13,24 +13,6 @@ const headers = {
 
 const main = async () => {
   const currentTag = github.context.payload.ref?.replace("refs/tags/", "") ?? "";
-
-  await updateTicket(currentTag);
-
-  const res = await execCommand('docker', ['build', '-t', `app:${currentTag}`, '.']);
-  console.log(res);
-  console.info("Image builded");
-
-  await fetch(`${API_HOST}/v2/issues/${TICKET_ID}/comments`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      text: `Собрали образ с тегом ${currentTag}`
-    })
-  });
-  console.info("Comment added");
-}
-
-const updateTicket = async (currentTag) => {
   const commits = await getCommits(currentTag);
 
   const pusherName = github.context.payload.pusher?.name;
