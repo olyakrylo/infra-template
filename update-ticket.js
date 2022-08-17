@@ -22,16 +22,11 @@ const headers = {
 
 const updateTicket = async () => {
   const currentTag = github.context.payload.ref?.replace("refs/tags/", "") ?? "";
-  console.info("Tag", currentTag)
-
   const commits = await getCommits(currentTag);
-  console.info("Commits", commits);
-
-  console.log(github.context.payload);
 
   const pusherName = github.context.payload.pusher?.name;
   const pushDate = new Date().toLocaleDateString();
-  console.info("Pusher");
+  console.info("Pusher", pusherName);
   console.info("Date", pushDate);
 
   const summary = `Релиз №${currentTag.replace("rc-", "")} от ${pushDate}`;
@@ -53,7 +48,7 @@ const getCommits = async (currentTag) => {
   const tags = (await execCommand('git', ['tag'])).split("\n").filter(Boolean);
   const index = tags.indexOf(currentTag);
   const commitsFilter = tags.length === 1 ? currentTag : `${currentTag}...${tags[index - 1]}`;
-  const releaseCommits = await execCommand('git', ['log', '--pretty=format:"%h %an %s"', commitsFilter]);
+  const releaseCommits = await execCommand('git', ['log', '--pretty=format:"%H %an %s"', commitsFilter]);
   return releaseCommits.replace(/"/g, "");
 }
 
