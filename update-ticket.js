@@ -10,18 +10,14 @@ const headers = {
   "X-Org-ID": ORG_ID,
 }
 
-// const main = async () => {
-//   await updateTicket();
-
-  // add comment
-  // fetch(`${HOST}/v2/issues/${TICKET_ID}/comments`, {
-  //   method: "POST",
-  //   headers,
-  //   body: JSON.stringify({
-  //     text: "test comment"
-  //   })
-  // }).then((response) => response.json()).then((res) => console.log(res));
-// }
+// add comment
+// fetch(`${HOST}/v2/issues/${TICKET_ID}/comments`, {
+//   method: "POST",
+//   headers,
+//   body: JSON.stringify({
+//     text: "test comment"
+//   })
+// }).then((response) => response.json()).then((res) => console.log(res));
 
 const updateTicket = async () => {
   const commits = github.context.payload.commits?.map((c) => {
