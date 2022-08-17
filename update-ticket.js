@@ -36,7 +36,7 @@ const updateTicket = async (currentTag, commits) => {
   const tagNum = currentTag.replace("rc-", "");
 
   const summary = `Релиз №${tagNum} от ${pushDate}`;
-  const description = `Ответственный за релиз \`${pusherName}\`\nКоммиты, попавшие в релиз:\n${commits}`;
+  const description = `Ответственный за релиз: ${pusherName}\n---\nКоммиты, попавшие в релиз:\n${commits}`;
 
   fetch(`${HOST}/v2/issues/${TICKET_ID}`, {
     method: "PATCH",
@@ -46,7 +46,7 @@ const updateTicket = async (currentTag, commits) => {
       description,
     })
   }).then((response) => response.json()).then((res) => {
-    console.log(`Ticket ${TICKET_ID} is successfully updated`);
+    console.log("Ticket is successfully updated");
   });
 }
 
@@ -78,7 +78,7 @@ const execCommand = async (command, options) => {
   return resString;
 }
 
-main().then(() => "Successfully done!");
+main().then(() => console.log("Successfully done!"));
 
 
 // original name
