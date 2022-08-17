@@ -36,5 +36,5 @@ jobs:
           OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
           ORG_ID: ${{ secrets.ORG_ID }}
           TICKET_ID: ${{ secrets.TICKET_ID }}
-          HOST: ${{ secrets.HOST }}
+          API_HOST: ${{ secrets.API_HOST }}
         run: node update-ticket.js
