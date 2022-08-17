@@ -1,6 +1,9 @@
 name: Release
 
 on:
+  push:
+    tags:
+      - '**'
   workflow_run:
     workflows: [Tests]
     types: [completed]
@@ -8,7 +11,6 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag'
     steps:
       - uses: actions/checkout@v3
         with:
