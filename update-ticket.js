@@ -35,9 +35,17 @@ const main = async () => {
 }
 
 const getCommits = async (currentTag) => {
-  const tags = (await execCommand('git', ['tag'])).split("\n").filter(Boolean);
+  const tags = (await execCommand('git', ['tag'])).split("\n")
+    .filter(Boolean)
+    .sort((a, b) => {
+      const aVal = parseInt(a.replace("rc-0.0.", ""));
+      const bVal = parseInt(b.replace("rc-0.0.", ""));
+      return aVal - bVal;
+    });
+
   const index = tags.indexOf(currentTag);
   const commitsFilter = tags.length === 1 ? currentTag : `${currentTag}...${tags[index - 1]}`;
+
   const releaseCommits = await execCommand('git', ['log', '--pretty=format:"%H %an %s"', commitsFilter]);
   return releaseCommits.replace(/"/g, "");
 }
