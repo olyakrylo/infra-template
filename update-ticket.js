@@ -65,6 +65,8 @@ const execCommand = async (command, options) => {
     }
   });
 
+  console.log(); // new line
+
   if (errString) {
     throw new Error(`Unable to execute ${command} ${options}`)
   }
