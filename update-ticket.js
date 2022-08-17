@@ -21,9 +21,11 @@ const headers = {
 
 const updateTicket = async () => {
   const commits = github.context.payload.commits?.map((c) => {
-    return `${c.id} ${c.author.name} ${c.author.message}`
-  })
-  const currentTag = github.context.payload.ref.replace("refs/tags/rc-", "");
+    return `${c.id} ${c.author.name} ${c.message}`
+  }) ?? [];
+
+  let currentTag = github.context.payload.ref?.replace("refs/tags/", "") ?? "";
+  currentTag = currentTag.replace("rc-", "");
 
   const pusherName = github.context.payload.pusher?.name;
   const pushDate = new Date().toLocaleDateString();
@@ -44,7 +46,6 @@ const updateTicket = async () => {
 }
 
 updateTicket().then(() => console.info("Successfully done!"));
-
 
 // original name
 // Кросс-проверка Инфраструктура — Крылова Ольга
