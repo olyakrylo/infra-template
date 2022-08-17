@@ -36,7 +36,7 @@ const updateTicket = async (currentTag, commits) => {
   const tagNum = currentTag.replace("rc-", "");
 
   const summary = `Релиз №${tagNum} от ${pushDate}`;
-  const description = `ответственный за релиз \`${pusherName}\`\nкоммиты, попавшие в релиз:\n${commits}`;
+  const description = `Ответственный за релиз \`${pusherName}\`\nКоммиты, попавшие в релиз:\n${commits}`;
 
   fetch(`${HOST}/v2/issues/${TICKET_ID}`, {
     method: "PATCH",
@@ -58,14 +58,22 @@ const getCommits = async (allTags, currentTag) => {
 
 const execCommand = async (command, options) => {
   let resString = "";
+  let errString = "";
 
   await exec.exec(command, options, {
     listeners: {
       stdout: (data) => {
         resString += data.toString();
       },
+      stderr: (data) => {
+        errString += data.toString();
+      }
     }
   });
+
+  if (errString) {
+    throw new Error(`Unable to execute ${command} ${options}`)
+  }
 
   return resString;
 }
