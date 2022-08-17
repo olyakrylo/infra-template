@@ -43,9 +43,6 @@ const getCommits = async (currentTag) => {
       return aVal - bVal;
     });
 
-  console.log(currentTag);
-  console.log(tags);
-
   const index = tags.indexOf(currentTag);
   const commitsFilter = tags.length === 1 ? currentTag : `${tags[index - 1]}...${currentTag}`;
 
