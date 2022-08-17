@@ -1,5 +1,4 @@
 const fetch = require("node-fetch");
-const exec = require("@actions/exec");
 const github = require("@actions/github");
 
 require("dotenv").config();
@@ -11,14 +10,8 @@ const headers = {
   "X-Org-ID": ORG_ID,
 }
 
-const main = async () => {
-  const tags = (await execCommand('git', ['tag'])).split("\n").filter(Boolean);
-  const currentTag = tags[tags.length - 1];
-
-  const commits = await getCommits(tags, currentTag);
-  console.info("Commits found");
-
-  await updateTicket(currentTag, commits);
+// const main = async () => {
+//   await updateTicket();
 
   // add comment
   // fetch(`${HOST}/v2/issues/${TICKET_ID}/comments`, {
@@ -28,17 +21,18 @@ const main = async () => {
   //     text: "test comment"
   //   })
   // }).then((response) => response.json()).then((res) => console.log(res));
-}
+// }
 
-const updateTicket = async (currentTag, commits) => {
+const updateTicket = async () => {
+  const commits = github.context.payload.commits?.map((c) => {
+    return `${c.id} ${c.author.name} ${c.author.message}`
+  })
+  const currentTag = github.context.payload.ref.replace("refs/tags/rc-", "");
+
   const pusherName = github.context.payload.pusher?.name;
-  console.log(github.context.payload);
-  console.log(github.context.payload.pusher);
   const pushDate = new Date().toLocaleDateString();
 
-  const tagNum = currentTag.replace("rc-", "");
-
-  const summary = `Релиз №${tagNum} от ${pushDate}`;
+  const summary = `Релиз №${currentTag} от ${pushDate}`;
   const description = `Ответственный за релиз: ${pusherName}\n---\nКоммиты, попавшие в релиз:\n${commits}`;
 
   fetch(`${HOST}/v2/issues/${TICKET_ID}`, {
@@ -53,35 +47,7 @@ const updateTicket = async (currentTag, commits) => {
   });
 }
 
-const getCommits = async (allTags, currentTag) => {
-  const commitsFilter = allTags.length === 1 ? currentTag : `${currentTag}...${allTags[allTags.length - 2]}`;
-  const releaseCommits = await execCommand('git', ['log', '--pretty=format:"%h %an %s"', commitsFilter]);
-  return releaseCommits.replace(/"/g, "");
-}
-
-const execCommand = async (command, options) => {
-  let resString = "";
-  let errString = "";
-
-  await exec.exec(command, options, {
-    listeners: {
-      stdout: (data) => {
-        resString += data.toString();
-      },
-      stderr: (data) => {
-        errString += data.toString();
-      }
-    }
-  });
-
-  if (errString) {
-    throw new Error(`Unable to execute ${command} ${options}`)
-  }
-
-  return resString;
-}
-
-main().then(() => console.info("Successfully done!"));
+updateTicket().then(() => console.info("Successfully done!"));
 
 
 // original name
