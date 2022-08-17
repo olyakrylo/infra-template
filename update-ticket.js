@@ -38,8 +38,8 @@ const getCommits = async (currentTag) => {
   const tags = (await execCommand('git', ['tag', '--list'])).split("\n")
     .filter(Boolean)
     .sort((a, b) => {
-      const aVal = parseInt(a.replace("rc-0.0.", ""));
-      const bVal = parseInt(b.replace("rc-0.0.", ""));
+      const aVal = parseInt(a.replace("rc-0.0.", ""), 10);
+      const bVal = parseInt(b.replace("rc-0.0.", ""), 10);
       return aVal - bVal;
     });
 
