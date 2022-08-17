@@ -4,24 +4,33 @@ const exec = require("@actions/exec");
 
 require("dotenv").config();
 
-const { TICKET_ID, OAUTH_TOKEN, ORG_ID, HOST } = process.env;
+const { TICKET_ID, OAUTH_TOKEN, ORG_ID, API_HOST } = process.env;
 
 const headers = {
   Authorization: `OAuth ${OAUTH_TOKEN}`,
   "X-Org-ID": ORG_ID,
 }
 
-// add comment
-// fetch(`${HOST}/v2/issues/${TICKET_ID}/comments`, {
-//   method: "POST",
-//   headers,
-//   body: JSON.stringify({
-//     text: "test comment"
-//   })
-// }).then((response) => response.json()).then((res) => console.log(res));
-
-const updateTicket = async () => {
+const main = async () => {
   const currentTag = github.context.payload.ref?.replace("refs/tags/", "") ?? "";
+
+  await updateTicket(currentTag);
+
+  const res = await execCommand('docker', ['build', '-t', `app:${currentTag}`, '.']);
+  console.log(res);
+  console.info("Image builded");
+
+  await fetch(`${API_HOST}/v2/issues/${TICKET_ID}/comments`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      text: `Собрали образ с тегом ${currentTag}`
+    })
+  });
+  console.info("Comment added");
+}
+
+const updateTicket = async (currentTag) => {
   const commits = await getCommits(currentTag);
 
   const pusherName = github.context.payload.pusher?.name;
@@ -32,16 +41,15 @@ const updateTicket = async () => {
   const summary = `Релиз №${currentTag.replace("rc-", "")} от ${pushDate}`;
   const description = `Ответственный за релиз: ${pusherName}\n---\nКоммиты, попавшие в релиз:\n${commits}`;
 
-  fetch(`${HOST}/v2/issues/${TICKET_ID}`, {
+  await fetch(`${API_HOST}/v2/issues/${TICKET_ID}`, {
     method: "PATCH",
     headers,
     body: JSON.stringify({
       summary,
       description,
     })
-  }).then((response) => response.json()).then((res) => {
-    console.info("Ticket is successfully updated");
   });
+  console.info("Ticket is successfully updated");
 }
 
 const getCommits = async (currentTag) => {
@@ -74,7 +82,7 @@ const execCommand = async (command, options) => {
   return resString;
 }
 
-updateTicket().then(() => console.info("Successfully done!"));
+main().then(() => console.info("Successfully done!"));
 
 // original name
 // Кросс-проверка Инфраструктура — Крылова Ольга
