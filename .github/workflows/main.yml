@@ -38,3 +38,11 @@ jobs:
           TICKET_ID: ${{ secrets.TICKET_ID }}
           API_HOST: ${{ secrets.API_HOST }}
         run: node update-ticket.js
+
+      - name: 'Build image'
+        env:
+          OAUTH_TOKEN: ${{ secrets.OAUTH_TOKEN }}
+          ORG_ID: ${{ secrets.ORG_ID }}
+          TICKET_ID: ${{ secrets.TICKET_ID }}
+          API_HOST: ${{ secrets.API_HOST }}
+        run: node build-image.js
