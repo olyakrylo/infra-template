@@ -29,7 +29,7 @@ const updateTicket = async () => {
   const pushDate = new Date().toLocaleDateString();
 
   const summary = `Релиз №${currentTag} от ${pushDate}`;
-  const description = `Ответственный за релиз: ${pusherName}\n---\nКоммиты, попавшие в релиз:\n${commits}`;
+  const description = `Ответственный за релиз: ${pusherName}\n---\nКоммиты, попавшие в релиз:\n${commits.join("\n")}`;
 
   fetch(`${HOST}/v2/issues/${TICKET_ID}`, {
     method: "PATCH",
