@@ -75,6 +75,3 @@ const execCommand = async (command, options) => {
 }
 
 main().then(() => console.info("Successfully done!"));
-
-// original name of ticket
-// Кросс-проверка Инфраструктура — Крылова Ольга
