@@ -54,6 +54,8 @@ const execCommand = async (command, options) => {
   let resString = "";
   let errString = "";
 
+  console.log(); // new line
+
   await exec.exec(command, options, {
     listeners: {
       stdout: (data) => {
@@ -64,8 +66,6 @@ const execCommand = async (command, options) => {
       }
     }
   });
-
-  console.log(); // new line
 
   if (errString) {
     throw new Error(`Unable to execute ${command} ${options}`)
