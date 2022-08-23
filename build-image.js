@@ -16,6 +16,7 @@ const main = async () => {
 
   await exec.exec('docker', ['build', '-t', `app:${currentTag}`, '.']);
   console.info("Image built");
+  console.info("Listen on port 3000");
 
   await fetch(`${API_HOST}/v2/issues/${TICKET_ID}/comments`, {
     method: "POST",
