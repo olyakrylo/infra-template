@@ -6,7 +6,7 @@ import './App.css';
 //Комментарий для коммита с тегом
 function App() {
   return (
-    <div className="App">
+    // <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
