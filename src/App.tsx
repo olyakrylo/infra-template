@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+//Комментарий для тестового коммита 1
 function App() {
   return (
     <div className="App">
