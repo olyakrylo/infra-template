@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 //Комментарий для тестового коммита 1
 //Комментарий для тестового коммита 2
+//Комментарий для коммита с тегом
 function App() {
   return (
     <div className="App">
